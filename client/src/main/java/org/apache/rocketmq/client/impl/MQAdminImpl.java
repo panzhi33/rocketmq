@@ -170,6 +170,10 @@ public class MQAdminImpl {
         try {
             TopicRouteData topicRouteData = this.mQClientFactory.getMQClientAPIImpl().getTopicRouteInfoFromNameServer(topic, timeoutMillis);
             if (topicRouteData != null) {
+                for (BrokerData bd : topicRouteData.getBrokerDatas()) {
+                    this.mQClientFactory.getBrokerAddrTable().put(bd.getBrokerName(), bd.getBrokerAddrs());
+                }
+
                 Set<MessageQueue> mqList = MQClientInstance.topicRouteData2TopicSubscribeInfo(topic, topicRouteData);
                 if (!mqList.isEmpty()) {
                     return mqList;
